@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SessionHub</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; max-width: 500px; margin: auto; }
+  input, button { margin: 5px 0; padding: 8px; width: 100%; }
+  #teacher-controls, #teacher-posts { margin-top: 20px; }
+  ul { padding-left: 20px; }
+  li { margin-bottom: 5px; }
+</style>
+</head>
+<body>
+
+<!-- Login Form -->
+<div id="login">
+  <h1>SessionHub</h1>
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- Feed & Live Sessions -->
+<div id="feed" style="display:none;">
+  <h2>SessionHub</h2>
+  
+  <!-- Teacher Post creation -->
+  <div id="teacher-posts" style="display:none;">
+    <input type="text" id="newPost" placeholder="Post title">
+    <button onclick="createPost()">Create Post</button>
+  </div>
+
+  <h3>Feed</h3>
+  <ul id="posts"></ul>
+
+  <!-- Teacher Live Session creation -->
+  <div id="teacher-controls" style="display:none;">
+    <input type="text" id="newLive" placeholder="Session title">
+    <button onclick="createLive()">Create Live Session</button>
+  </div>
+
+  <h3>Live Sessions</h3>
+  <ul id="liveList"></ul>
+</div>
+
+<script>
+const API_URL = "http://10.78.103.81:3000"; // Termux backend IP
+let currentUser = null;
+
+// ===== Login =====
+async function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const res = await fetch(`${API_URL}/login`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({email, password})
+  });
+
+  const data = await res.json();
+  if(res.status !== 200){
+    alert(data.error || "Login failed");
+    return;
+  }
+
+  currentUser = data;
+  document.getElementById("login").style.display = "none";
+  document.getElementById("feed").style.display = "block";
+
+  if(currentUser.role === "teacher") {
+    document.getElementById("teacher-controls").style.display = "block";
+    document.getElementById("teacher-posts").style.display = "block";
+  }
+
+  loadPosts();
+  loadLiveSessions();
+}
+
+// ===== Load Posts =====
+async function loadPosts(){
+  const res = await fetch(`${API_URL}/posts`);
+  const posts = await res.json();
+
+  const postsList = document.getElementById("posts");
+  postsList.innerHTML = "";
+  posts.forEach(p => {
+    const li = document.createElement("li");
+    li.textContent = `${p.title} (Teacher: ${p.teacher})`;
+    postsList.appendChild(li);
+  });
+}
+
+// ===== Create Post =====
+async function createPost(){
+  const title = document.getElementById("newPost").value;
+  if(!title) return alert("Enter post title");
+
+  const res = await fetch(`${API_URL}/posts`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({title, teacher: currentUser.email})
+  });
+
+  const data = await res.json();
+  if(data.success){
+    document.getElementById("newPost").value = "";
+    loadPosts();
+  } else {
+    alert(data.error || "Error creating post");
+  }
+}
+
+// ===== Load Live Sessions =====
+async function loadLiveSessions(){
+  const res = await fetch(`${API_URL}/live`);
+  const sessions = await res.json();
+
+  const liveList = document.getElementById("liveList");
+  liveList.innerHTML = "";
+  sessions.forEach(s => {
+    const li = document.createElement("li");
+    li.textContent = `${s.title} (Teacher: ${s.teacher})`;
+    liveList.appendChild(li);
+  });
+}
+
+// ===== Create Live Session =====
+async function createLive(){
+  const title = document.getElementById("newLive").value;
+  if(!title) return alert("Enter session title");
+
+  const res = await fetch(`${API_URL}/live`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({title, teacher: currentUser.email})
+  });
+
+  const data = await res.json();
+  if(data.success){
+    document.getElementById("newLive").value = "";
+    loadLiveSessions();
+  } else {
+    alert(data.error || "Error creating live session");
+  }
+}
+</script>
+
+</body>
+</html>
