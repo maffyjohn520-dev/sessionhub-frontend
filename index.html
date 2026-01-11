@@ -11,9 +11,8 @@
   <p id="result"></p>
 
   <script>
-    const API_URL = "https://sessionhub-backend-production.up.railway.app";
+    const API_URL = const API_URL = "https://sessionhub-backend-production.up.railway.app";
 
-    async function ping() {
       const res = await fetch(API_URL);
       const text = await res.text();
       document.getElementById("result").innerText = text;
