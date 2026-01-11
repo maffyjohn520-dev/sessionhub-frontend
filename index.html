@@ -11,12 +11,17 @@
   <p id="result"></p>
 
   <script>
+    // Replace this with your Railway backend URL
     const API_URL = "https://sessionhub-backend-production.up.railway.app";
 
     async function ping() {
-      const res = await fetch(API_URL);
-      const text = await res.text();
-      document.getElementById("result").innerText = text;
+      try {
+        const res = await fetch(API_URL);
+        const text = await res.text();
+        document.getElementById("result").innerText = text;
+      } catch (err) {
+        document.getElementById("result").innerText = "Backend not reachable!";
+      }
     }
   </script>
 </body>
