@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SessionHub Frontend</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
-    #result { margin-top: 20px; font-weight: bold; }
+    body { font-family: Arial, sans-serif; padding: 2rem; background-color: #f0f0f0; }
+    h1 { color: #333; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; }
+    #result { margin-top: 1rem; font-weight: bold; }
   </style>
 </head>
 <body>
   <h1>SessionHub Frontend</h1>
-  <button onclick="ping()">Ping Backend</button>
+  <button onclick="pingBackend()">Ping Backend</button>
   <p id="result">Waiting...</p>
 
   <script>
-    // Update this URL to match your Railway backend
-    const API_URL = "https://sessionhub-backend-production-f73b.up.railway.app";
+    const API_URL = "http://100.79.121.187:3000"; // Your backend IP and port
 
-    async function ping() {
-      document.getElementById("result").innerText = "Waiting...";
+    async function pingBackend() {
+      const resultEl = document.getElementById("result");
+      resultEl.innerText = "Pinging backend...";
       try {
-        const res = await fetch(API_URL);
+        const res = await fetch(`${API_URL}/ping`);
         const text = await res.text();
-        document.getElementById("result").innerText = text;
+        resultEl.innerText = "Backend says: " + text;
       } catch (err) {
-        document.getElementById("result").innerText = "Error connecting to backend";
+        resultEl.innerText = "Error connecting to backend";
         console.error(err);
       }
     }
