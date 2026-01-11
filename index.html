@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>SessionHub</title>
@@ -11,7 +11,6 @@
   <p id="result"></p>
 
   <script>
-    // Replace this with your Railway backend URL
     const API_URL = "https://sessionhub-backend-production.up.railway.app";
 
     async function ping() {
@@ -20,9 +19,11 @@
         const text = await res.text();
         document.getElementById("result").innerText = text;
       } catch (err) {
-        document.getElementById("result").innerText = "Backend not reachable!";
+        document.getElementById("result").innerText = "Error connecting to backend";
+        console.error(err);
       }
     }
   </script>
 </body>
 </html>
+
