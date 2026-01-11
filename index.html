@@ -11,13 +11,11 @@
   <p id="result">Waiting...</p>
 
   <script>
-    // ✅ Replace with your actual Railway backend URL
-    const API_URL = "https://sessionhub-backend-production-f73b.up.railway.app";
+    const API_URL = "https://sessionhub-backend-production-f73b.up.railway.app/";
 
     async function ping() {
       try {
         const res = await fetch(API_URL);
-        if (!res.ok) throw new Error("HTTP error " + res.status);
         const text = await res.text();
         document.getElementById("result").innerText = text;
       } catch (err) {
