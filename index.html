@@ -6,6 +6,7 @@
 </head>
 <body>
   <h1>SessionHub Frontend</h1>
+
   <button onclick="ping()">Ping Backend</button>
 
   <p id="result">Waiting...</p>
@@ -19,7 +20,7 @@
         const text = await res.text();
         document.getElementById("result").innerText = text;
       } catch (err) {
-        document.getElementById("result").innerText = "Error connecting to backend 😢";
+        document.getElementById("result").innerText = "Failed to respond";
         console.error(err);
       }
     }
