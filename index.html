@@ -2,24 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SessionHub Frontend</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #333;
-    }
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    #result { margin-top: 20px; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -28,10 +15,11 @@
   <p id="result">Waiting...</p>
 
   <script>
-    // ✅ Use your Railway backend URL here
+    // Update this URL to match your Railway backend
     const API_URL = "https://sessionhub-backend-production-f73b.up.railway.app";
 
     async function ping() {
+      document.getElementById("result").innerText = "Waiting...";
       try {
         const res = await fetch(API_URL);
         const text = await res.text();
